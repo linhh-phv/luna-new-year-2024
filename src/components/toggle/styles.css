@@ -1,0 +1,27 @@
+/* toogle */
+.toggle {
+    width: 100px;
+    height: 40px;
+    background-color: #ccc;
+    padding: 5px;
+    border-radius: 100rem;
+    cursor: pointer;
+    transition: all 0.2s linear;
+}
+
+.toggle.active {
+    background-color: aquamarine;
+}
+
+/* spinner */
+.spinner {
+    background-color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 100rem;
+    transition: all 0.2s linear;
+}
+
+.spinner.active {
+    transform: translateX(60px);
+}

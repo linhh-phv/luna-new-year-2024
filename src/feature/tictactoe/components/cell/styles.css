@@ -1,0 +1,18 @@
+.cell-game {
+    /* border: 1px #ccc solid; */
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 100px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.cell-game.is-x {
+    color: #2cccff;
+}
+
+.cell-game.is-o {
+    color: orange;
+}
