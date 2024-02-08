@@ -1,10 +1,10 @@
 .board-game {
-    width: 500px;
-    height: 500px;
+    width: 820px;
+    height: 615px;
     /* border: 1px #ccc solid; */
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    grid-gap: 25px;
+    grid-template-columns: repeat(20, 1fr);
+    grid-template-rows: repeat(15, 1fr);
+    grid-gap: 1px;
 
 }

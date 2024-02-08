@@ -1,7 +1,7 @@
 /* toogle */
 .toggle {
     width: 100px;
-    height: 40px;
+    height: 50px;
     background-color: #ccc;
     padding: 5px;
     border-radius: 100rem;
@@ -23,5 +23,5 @@
 }
 
 .spinner.active {
-    transform: translateX(60px);
+    transform: translateX(50px);
 }
