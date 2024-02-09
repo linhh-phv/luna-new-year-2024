@@ -21,6 +21,10 @@ export default function Home() {
         <Link to="/about">About</Link>
       </Box>
 
+      <Box title="GourdCrabShrimpFish">
+        <Link to="/gourdCrabShrimpFish">GourdCrabShrimpFish</Link>
+      </Box>
+
       <Box title="HelloTailwind">
         <HelloTailwind />
       </Box>

@@ -5,6 +5,7 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./navigations/home";
 import About from "./navigations/about";
 import { ThemeProvider } from "styled-components";
+import GourdCrabShrimpFish from "./feature/gourd-crab-shrimp-fish";
 
 const theme = {
   colors: {
@@ -17,6 +18,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="about" element={<About />} />
+        <Route path="gourdCrabShrimpFish" element={<GourdCrabShrimpFish />} />
       </Routes>
     </ThemeProvider>
   );
