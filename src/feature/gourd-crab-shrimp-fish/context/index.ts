@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { IDice, IGamer, IPieces, IPrice } from "../model";
+import { IDice, IGamer, IGamerJoined, IPieces, IPrice } from "../model";
 import { GameAction } from "../state";
 
 interface ISharedGourdCrabShrimpFish {
@@ -13,6 +13,7 @@ interface ISharedGourdCrabShrimpFish {
   listGamer: IGamer[];
   currentGamer?: IGamer;
   gameDone: boolean;
+  listGamerJoined: IGamerJoined[];
 }
 export const GourdCrabShrimpFishContext =
   createContext<ISharedGourdCrabShrimpFish | null>(null);

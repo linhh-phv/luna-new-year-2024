@@ -8,8 +8,15 @@ export interface IDice {
   image: string;
 }
 
+export interface IGamerJoined {
+  id: string;
+  name: string;
+  totalPrice: number;
+  numTurns: number;
+}
+
 export interface IGamer {
-  // id: number;
+  id: string;
   name?: string;
   dateBet?: string;
   pieces?: IPieces;

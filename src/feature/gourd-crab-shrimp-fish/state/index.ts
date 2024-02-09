@@ -1,6 +1,8 @@
-import { IDice, IGamer, IPieces, IPrice } from "../model";
+import { genUUID } from "../../../utils";
+import { IDice, IGamer, IGamerJoined, IPieces, IPrice } from "../model";
 
 interface IGameState {
+  listGamerJoined: IGamerJoined[];
   listGamer: IGamer[];
   totalScore: number;
   listPieces: IPieces[];
@@ -57,6 +59,11 @@ const initState: IGameState = {
   currentPieces: undefined,
   currentGamer: undefined,
   listGamer: [],
+  listGamerJoined: [
+    { id: genUUID(), name: "Linh", numTurns: 0, totalPrice: 0 },
+    { id: genUUID(), name: "Ly", numTurns: 0, totalPrice: 0 },
+    { id: genUUID(), name: "Hảo", numTurns: 0, totalPrice: 0 },
+  ],
   gameDone: false,
   listPrice: [
     {
@@ -82,6 +89,7 @@ const initState: IGameState = {
 
 export type GameAction =
   | { type: "placeABet"; payload: { gamer: IGamer } }
+  | { type: "gamerJoin"; payload: { gamer: IGamerJoined } }
   | { type: "choosePieces"; payload: { pieces: IPieces | undefined } }
   | { type: "gamerChoosed"; payload: { gamer: IGamer | undefined } }
   | { type: "play" }
@@ -90,6 +98,13 @@ export type GameAction =
 
 const reducer = (state: IGameState, action: GameAction): IGameState => {
   switch (action.type) {
+    case "gamerJoin": {
+      const nextState: IGameState = JSON.parse(JSON.stringify(state));
+      const { gamer } = action.payload;
+      nextState.listGamerJoined.push(gamer);
+      return nextState;
+    }
+
     case "placeABet":
       const nextState: IGameState = JSON.parse(JSON.stringify(state));
       const { gamer } = action.payload;
@@ -137,6 +152,17 @@ const reducer = (state: IGameState, action: GameAction): IGameState => {
             totalPrice: _gamer.price! + _gamer.price! * numPieces,
           };
           nextState.listGamer[i] = _newGamer;
+        }
+      }
+      for (let k = 0; k < nextState.listGamerJoined.length; k++) {
+        const _gamerJoined = nextState.listGamerJoined[k];
+        for (let l = 0; l < nextState.listGamer.length; l++) {
+          const _gamerResult = nextState.listGamer[l];
+          if (_gamerJoined.id === _gamerResult.id) {
+            _gamerJoined.totalPrice +=
+              (_gamerResult.totalPrice ?? 0) - (_gamerResult.price ?? 0);
+            _gamerJoined.numTurns++;
+          }
         }
       }
 

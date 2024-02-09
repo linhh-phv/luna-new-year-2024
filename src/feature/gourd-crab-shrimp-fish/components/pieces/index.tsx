@@ -11,7 +11,7 @@ const Pieces: React.FC<IProps> = ({ pieces, isSelected }) => {
   const dataFromContext = useContext(GourdCrabShrimpFishContext);
   const { dispatch } = dataFromContext!;
 
-  const style = `w-[250px] h-[250px] ${
+  const style = `w-[230px] h-[230px] ${
     isSelected ? "ring-4 ring-blue-500 rounded-2xl" : ""
   }`;
 

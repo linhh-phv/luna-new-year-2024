@@ -22,7 +22,7 @@ const ListGamer = () => {
               </div>
             </div>
             {gamer?.totalPrice && (
-              <div className="text-green-400 text-2xl font-bold mr-10">
+              <div className="text-green-400 text-2xl font-bold mr-2">
                 +{gamer?.totalPrice!} nghìn
               </div>
             )}
@@ -32,11 +32,11 @@ const ListGamer = () => {
     );
   };
   return (
-    <div className="w-full m-5" id="list-user">
+    <div className="w-full mt-5" id="list-user">
       <div className="text-white text-center text-3xl font-bold">
         DANH SÁCH ĐẶT CƯỢC
       </div>
-      <div className="mt-10">{_renderLIstGame()}</div>
+      <div className="mt-10 ml-2 mr-2">{_renderLIstGame()}</div>
     </div>
   );
 };

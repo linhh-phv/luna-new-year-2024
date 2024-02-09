@@ -1,22 +1,87 @@
-import React, { ChangeEvent, useContext, useState } from "react";
+import React, {
+  ChangeEvent,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import "./styles.css";
 import { GourdCrabShrimpFishContext } from "../context";
 import { IGamer, IPrice } from "../model";
+import { genUUID } from "../../../utils";
+import DropdownInput from "../components/dropdownGamer";
 
 interface IProps {}
 
 const ListBet: React.FC<IProps> = () => {
   const dataFromContext = useContext(GourdCrabShrimpFishContext);
-  const { listPrice, currentPieces, dispatch, currentGamer } = dataFromContext!;
+  const { listPrice, currentPieces, dispatch, currentGamer, listGamerJoined } =
+    dataFromContext!;
 
   const [nameValue, setNameValue] = useState<string>("");
   const [priceValue, setPriceValue] = useState<string>("");
+  const [isOpenNameDropdown, setIsOpenNameDropdown] = useState<boolean>(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const closeDropdown = (event: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
+      _onCloseDropdownName();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", closeDropdown);
+    return () => {
+      document.removeEventListener("mousedown", closeDropdown);
+    };
+  }, []);
 
   const _onChoosePrice = (price: IPrice) => {
-    if (price?.value?.toString() === priceValue) {
-      setPriceValue("");
+    if (currentGamer?.id) {
+      if (price?.value?.toString() === priceValue) {
+        setPriceValue("");
+      } else {
+        const _price = price.value?.toString().trim();
+        const _gamer: IGamer = {
+          ...currentGamer,
+          price: Number(_price),
+        };
+        setPriceValue(_price);
+        dispatch({ type: "gamerChoosed", payload: { gamer: _gamer } });
+      }
+    }
+  };
+
+  const _onNameChange = (text: string) => {
+    const _name = text.trim();
+
+    const _findGamer = listGamerJoined?.findIndex(
+      (_gamer) => _gamer?.name?.trim().toLowerCase() === _name.toLowerCase()
+    );
+    let _gamer: IGamer;
+    if (_findGamer !== -1) {
+      _gamer = {
+        ...currentGamer,
+        name: _name,
+        id: listGamerJoined[_findGamer].id,
+      };
     } else {
-      const _price = price.value?.toString().trim();
+      _gamer = {
+        ...currentGamer,
+        name: _name,
+        id: genUUID(),
+      };
+    }
+
+    setNameValue(_name);
+    dispatch({ type: "gamerChoosed", payload: { gamer: _gamer } });
+  };
+  const _onPriceChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (currentGamer?.id) {
+      const _price = event.target.value.trim();
       const _gamer: IGamer = {
         ...currentGamer,
         price: Number(_price),
@@ -26,38 +91,38 @@ const ListBet: React.FC<IProps> = () => {
     }
   };
 
-  const _onNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const _name = event.target.value.trim();
-    const _gamer: IGamer = {
-      ...currentGamer,
-      name: _name,
-    };
-    setNameValue(_name);
-    dispatch({ type: "gamerChoosed", payload: { gamer: _gamer } });
-  };
-  const _onPriceChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const _price = event.target.value.trim();
-    const _gamer: IGamer = {
-      ...currentGamer,
-      price: Number(_price),
-    };
-    setPriceValue(_price);
-    dispatch({ type: "gamerChoosed", payload: { gamer: _gamer } });
-  };
-
   const _onPlaceABet = () => {
-    const _gamer: IGamer = {
-      ...currentGamer,
-      dateBet: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-      }),
-      pieces: currentPieces,
-    };
-    setNameValue("");
-    setPriceValue("");
-    dispatch({ type: "placeABet", payload: { gamer: _gamer } });
+    if (currentGamer?.id) {
+      const _gamer: IGamer = {
+        ...currentGamer,
+        dateBet: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        }),
+        pieces: currentPieces,
+      };
+      setNameValue("");
+      setPriceValue("");
+      dispatch({ type: "placeABet", payload: { gamer: _gamer } });
+
+      const _findGamer = listGamerJoined?.findIndex(
+        (_gamerJoined) => _gamerJoined.id === _gamer.id
+      );
+      if (_findGamer === -1) {
+        dispatch({
+          type: "gamerJoin",
+          payload: {
+            gamer: {
+              id: _gamer.id,
+              name: _gamer.name!,
+              numTurns: 0,
+              totalPrice: 0,
+            },
+          },
+        });
+      }
+    }
   };
   const _onReset = () => {
     setNameValue("");
@@ -65,20 +130,23 @@ const ListBet: React.FC<IProps> = () => {
     dispatch({ type: "choosePieces", payload: { pieces: undefined } });
   };
 
+  const _onOpenDropdownName = () => {
+    setIsOpenNameDropdown(true);
+  };
+  const _onCloseDropdownName = () => {
+    setIsOpenNameDropdown(false);
+  };
+
   const _renderNameField = () => {
     return (
-      <div className="">
-        <label htmlFor="nameField" className="block text-white text-2xl">
-          Nhập tên
-        </label>
-        <input
-          id="nameField"
-          type="text"
-          className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring focus:border-blue-300"
-          value={nameValue}
-          onChange={_onNameChange}
-        />
-      </div>
+      <DropdownInput
+        dropdownRef={dropdownRef}
+        isOpen={isOpenNameDropdown}
+        nameValue={nameValue}
+        onNameChange={_onNameChange}
+        toggleDropdown={_onOpenDropdownName}
+        onClose={_onCloseDropdownName}
+      />
     );
   };
 
@@ -86,7 +154,7 @@ const ListBet: React.FC<IProps> = () => {
     return (
       <div className="mt-5">
         <label htmlFor="priceField" className="block text-white text-2xl">
-          Nhập giá cược
+          Nhập giá
         </label>
         <input
           id="priceField"
@@ -124,7 +192,7 @@ const ListBet: React.FC<IProps> = () => {
     return (
       <div className="flex justify-end mt-10">
         <button className="text-2xl text-white" onClick={_onReset}>
-          Không Cược
+          Bỏ Cược
         </button>
       </div>
     );
@@ -151,16 +219,20 @@ const ListBet: React.FC<IProps> = () => {
   }`;
   return (
     <div className={style} id="list-bet">
-      <div className="w-[25%] mr-4">
-        {_renderNameField()}
-        {_renderPriceield()}
+      <div className="w-[25%] mr-4 flex justify-center items-center">
+        <div className="">
+          {_renderNameField()}
+          {_renderPriceield()}
+        </div>
       </div>
       <div className="w-full h-full flex justify-between items-center">
         {_renderBet()}
       </div>
-      <div className="w-[20%]">
-        {_renderPlaceABet()}
-        {_renderBtnReset()}
+      <div className="w-[20%] flex justify-center items-center">
+        <div className="">
+          {_renderPlaceABet()}
+          {_renderBtnReset()}
+        </div>
       </div>
     </div>
   );

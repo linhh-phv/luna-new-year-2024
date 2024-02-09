@@ -20,6 +20,7 @@ const GourdCrabShrimpFish = () => {
     listGamer,
     currentGamer,
     gameDone,
+    listGamerJoined,
   } = state;
 
   const _renderListGamer = () => {
@@ -41,7 +42,7 @@ const GourdCrabShrimpFish = () => {
             <ListPieces />
           </div>
         </div>
-        <div className="flex h-[25vh] ml-[5%]">
+        <div className="flex h-[30vh] ml-[2%]">
           <ListBet />
         </div>
       </div>
@@ -61,11 +62,12 @@ const GourdCrabShrimpFish = () => {
         listGamer,
         currentGamer,
         gameDone,
+        listGamerJoined,
       }}
     >
       <div className="w-full" id="gourd-crab-shrimp-fish">
         <GameInfo />
-        <div className="flex justify-between pl-16 pr-16 mt-5">
+        <div className="flex justify-between pl-5 pr-5 mt-5">
           {_renderListGamer()}
           {_renderGame()}
         </div>
