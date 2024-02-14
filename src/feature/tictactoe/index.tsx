@@ -1,11 +1,11 @@
-import React, { ReducerAction, useReducer, useState } from "react";
+import React, { useReducer } from "react";
 import "./styles.css";
 import BoardTicTacToeGame from "./components/board";
-import { calWin, genBoard } from "./utils";
+import { calWin } from "./utils";
 import { ITicTacToe } from "./model/tictactoe";
 import { initState, reducer } from "./state";
 
-const TicTacToeGame = () => {
+const TicTacToeGame: React.FC = () => {
   const [state, dispatch] = useReducer(reducer, initState);
   const { board, xIsNext } = state;
   const winner = calWin(board);

@@ -1,12 +1,12 @@
 .cell-game {
-    /* border: 1px #ccc solid; */
+    border: 1px #f1f1f1 solid;
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight: bold;
-    font-size: 100px;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    font-size: 30px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 2px 4px;
 }
 
 .cell-game.is-x {

@@ -2,7 +2,7 @@ import { ITicTacToe } from "../model/tictactoe";
 
 const genBoard = () => {
   const _arr: ITicTacToe[] = [];
-  for (let i = 0; i < 9; i++) {
+  for (let i = 0; i < 300; i++) {
     _arr.push({ id: i, value: null });
   }
   return _arr;
