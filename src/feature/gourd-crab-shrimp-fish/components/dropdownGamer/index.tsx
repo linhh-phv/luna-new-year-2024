@@ -39,7 +39,7 @@ const DropdownInput: React.FC<IProps> = ({
       </div>
 
       {isOpen && (
-        <div className="absolute z-10 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+        <div className="absolute z-10 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5  h-full overflow-auto">
           <div className="py-1">
             {listGamerJoined?.length > 0 &&
               listGamerJoined.map((_gamer) => {

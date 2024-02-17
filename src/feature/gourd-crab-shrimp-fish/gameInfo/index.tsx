@@ -2,6 +2,7 @@ import React, { ChangeEvent, useCallback, useContext, useState } from "react";
 import { GourdCrabShrimpFishContext } from "../context";
 import FullScreenPopup from "../../../components/popup";
 import { genUUID } from "../../../utils";
+import { renderPrice } from "../utils";
 
 const GameInfo = () => {
   const dataFromContext = useContext(GourdCrabShrimpFishContext);
@@ -52,7 +53,7 @@ const GameInfo = () => {
       <div className="mt-5">
         <div className="flex justify-between">
           <label htmlFor="priceField" className="block  text-2xl">
-            Nhập tên
+            Nhập tên người chơi mới
           </label>
 
           <button onClick={_onAddGamer} className="text-green-700  text-2xl">
@@ -70,7 +71,7 @@ const GameInfo = () => {
     );
   };
 
-  const _renderListGamerJoined = () => {
+  const _renderPopupListGamerJoined = () => {
     return (
       <FullScreenPopup isOpen={visiblePopup} onClose={_onClosePopup}>
         <div className="text-center text-yellow-600 text-3xl">
@@ -94,22 +95,27 @@ const GameInfo = () => {
               </tr>
             </thead>
             <tbody>
-              {listGamerJoined.map((row, index) => (
-                <tr key={row.id}>
-                  <td className="border border-gray-400 px-4 py-2 w-[15%]">
-                    {index + 1}.
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2 w-[20%]">
-                    {row?.name}
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2 w-[20%]">
-                    {row?.numTurns ?? 0}
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2 w-[20%]">
-                    {row?.totalPrice ?? 0} nghìn
-                  </td>
-                </tr>
-              ))}
+              {listGamerJoined.map((row, index) => {
+                const _classesTotalPrice = `border border-gray-400 px-4 py-2 w-[20%] ${
+                  row?.totalPrice >= 0 ? "text-green-600" : " text-red-600"
+                }`;
+                return (
+                  <tr key={row.id}>
+                    <td className="border border-gray-400 px-4 py-2 w-[15%]">
+                      {index + 1}.
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2 w-[20%]">
+                      {row?.name}
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2 w-[20%]">
+                      {row?.numTurns ?? 0}
+                    </td>
+                    <td className={_classesTotalPrice}>
+                      {renderPrice(row?.totalPrice ?? 0)}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -117,17 +123,8 @@ const GameInfo = () => {
     );
   };
 
-  // {listGamerJoined?.length > 0 &&
-  //   listGamerJoined.map((_gamer, index) => {
-  //     return (
-  //       <div className="w-full " key={_gamer.id}>
-  //         {/* <div className="">{`${index + 1}. ${_gamer.name}`}</div> */}
-  //       </div>
-  //     );
-  //   })}
-
-  return (
-    <div className="w-full h-[60px] flex justify-between pl-16 pr-16 pt-5">
+  const _renderHeaderLeft = () => {
+    return (
       <div className="h-full flex justify-center items-center">
         <img
           className="h-full w-[60px]"
@@ -140,14 +137,26 @@ const GameInfo = () => {
           BẦU CUA
         </div>
       </div>
+    );
+  };
+
+  const _renderHeaderRight = () => {
+    return (
       <div className="flex">
-        <div className="mr-5" onClick={_onOpenPopup}>
+        <button className="mr-5" onClick={_onOpenPopup}>
           <span className="text-white">Danh sách người chơi</span>
-        </div>
-        <div className="mr-5">sound</div>
-        <div className="">help</div>
+        </button>
+        <button className="mr-5">sound</button>
+        <button className="">help</button>
       </div>
-      {_renderListGamerJoined()}
+    );
+  };
+
+  return (
+    <div className="w-full h-[60px] flex justify-between pl-5 pr-5">
+      {_renderHeaderLeft()}
+      {_renderHeaderRight()}
+      {_renderPopupListGamerJoined()}
     </div>
   );
 };

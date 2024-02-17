@@ -1,5 +1,6 @@
 import React, {
   ChangeEvent,
+  useCallback,
   useContext,
   useEffect,
   useRef,
@@ -10,18 +11,32 @@ import { GourdCrabShrimpFishContext } from "../context";
 import { IGamer, IPrice } from "../model";
 import { genUUID } from "../../../utils";
 import DropdownInput from "../components/dropdownGamer";
+import { debounce } from "lodash";
 
 interface IProps {}
 
 const ListBet: React.FC<IProps> = () => {
   const dataFromContext = useContext(GourdCrabShrimpFishContext);
-  const { listPrice, currentPieces, dispatch, currentGamer, listGamerJoined } =
-    dataFromContext!;
+  const {
+    listPrice,
+    currentPieces,
+    dispatch,
+    currentGamer,
+    listGamerJoined,
+    gameDone,
+  } = dataFromContext!;
 
   const [nameValue, setNameValue] = useState<string>("");
   const [priceValue, setPriceValue] = useState<string>("");
   const [isOpenNameDropdown, setIsOpenNameDropdown] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (gameDone) {
+      setNameValue("");
+      setPriceValue("");
+    }
+  }, [gameDone]);
 
   const closeDropdown = (event: MouseEvent) => {
     if (
@@ -55,30 +70,47 @@ const ListBet: React.FC<IProps> = () => {
     }
   };
 
-  const _onNameChange = (text: string) => {
-    const _name = text.trim();
+  function _onNameChange(text: string) {
+    searchDebounce(text);
+    setNameValue(text);
+  }
 
-    const _findGamer = listGamerJoined?.findIndex(
-      (_gamer) => _gamer?.name?.trim().toLowerCase() === _name.toLowerCase()
-    );
-    let _gamer: IGamer;
-    if (_findGamer !== -1) {
-      _gamer = {
-        ...currentGamer,
-        name: _name,
-        id: listGamerJoined[_findGamer].id,
-      };
-    } else {
-      _gamer = {
-        ...currentGamer,
-        name: _name,
-        id: genUUID(),
-      };
-    }
+  const searchDebounce = useCallback(
+    debounce((text: string) => {
+      let _name = text;
+      for (let i = 0; i < listGamerJoined.length; i++) {
+        const _gamerJoined = listGamerJoined[i];
+        if (_gamerJoined.maskId === _name) {
+          _name = _gamerJoined.name;
+        }
+      }
 
-    setNameValue(_name);
-    dispatch({ type: "gamerChoosed", payload: { gamer: _gamer } });
-  };
+      console.log(";;;;lllll", _name, listGamerJoined);
+
+      const _findGamer = listGamerJoined?.findIndex(
+        (_gamer) =>
+          _gamer?.name?.trim().toLowerCase() === _name.trim().toLowerCase()
+      );
+      let _gamer: IGamer;
+      if (_findGamer !== -1) {
+        _gamer = {
+          ...currentGamer,
+          name: _name.trim(),
+          id: listGamerJoined[_findGamer].id,
+        };
+      } else {
+        _gamer = {
+          ...currentGamer,
+          name: _name.trim(),
+          id: genUUID(),
+        };
+      }
+      setNameValue(_name);
+      dispatch({ type: "gamerChoosed", payload: { gamer: _gamer } });
+    }, 500),
+    [listGamerJoined, currentGamer]
+  );
+
   const _onPriceChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (currentGamer?.id) {
       const _price = event.target.value.trim();

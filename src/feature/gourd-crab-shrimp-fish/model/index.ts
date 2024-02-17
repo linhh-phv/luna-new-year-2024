@@ -13,6 +13,7 @@ export interface IGamerJoined {
   name: string;
   totalPrice: number;
   numTurns: number;
+  maskId?: string;
 }
 
 export interface IGamer {

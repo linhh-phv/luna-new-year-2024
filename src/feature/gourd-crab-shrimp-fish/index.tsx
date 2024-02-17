@@ -25,7 +25,7 @@ const GourdCrabShrimpFish = () => {
 
   const _renderListGamer = () => {
     return (
-      <div className="w-[30%] h-[90vh] bg-slate-600 bg-opacity-90">
+      <div className="w-[30%] h-[90vh] overflow-auto bg-slate-600 bg-opacity-90">
         <ListGamer />
       </div>
     );

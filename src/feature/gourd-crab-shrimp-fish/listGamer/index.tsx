@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import "./styles.css";
 import { GourdCrabShrimpFishContext } from "../context";
+import { renderPrice } from "../utils";
 
 const ListGamer = () => {
   const dataFromContext = useContext(GourdCrabShrimpFishContext);
@@ -11,19 +12,19 @@ const ListGamer = () => {
       listGamer?.length > 0 &&
       listGamer.map((gamer) => {
         return (
-          <div className="w-full flex justify-between">
+          <div key={gamer.id} className="w-full flex justify-between">
             <div className="flex">
               <div className="text-yellow-400 text-2xl">
                 <span className="text-white italic text-xl">
                   {gamer?.dateBet}:
                 </span>{" "}
-                {gamer?.name} đặt {gamer?.pieces?.name} giá {gamer?.price!}
-                {" nghìn"}
+                {gamer?.name} đặt {gamer?.pieces?.name} giá{" "}
+                {renderPrice(gamer?.price!)}
               </div>
             </div>
             {gamer?.totalPrice && (
               <div className="text-green-400 text-2xl font-bold mr-2">
-                +{gamer?.totalPrice!} nghìn
+                +{renderPrice(gamer?.totalPrice!)}
               </div>
             )}
           </div>

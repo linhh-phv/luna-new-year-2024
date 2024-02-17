@@ -60,9 +60,58 @@ const initState: IGameState = {
   currentGamer: undefined,
   listGamer: [],
   listGamerJoined: [
-    { id: genUUID(), name: "Linh", numTurns: 0, totalPrice: 0 },
-    { id: genUUID(), name: "Ly", numTurns: 0, totalPrice: 0 },
-    { id: genUUID(), name: "Hảo", numTurns: 0, totalPrice: 0 },
+    {
+      id: genUUID(),
+      name: "Linh Phạm",
+      numTurns: 0,
+      totalPrice: 0,
+      maskId: "1",
+    },
+    { id: genUUID(), name: "Bích Ly", numTurns: 0, totalPrice: 0, maskId: "2" },
+    {
+      id: genUUID(),
+      name: "Hảo Phạm",
+      numTurns: 0,
+      totalPrice: 0,
+      maskId: "3",
+    },
+    { id: genUUID(), name: "My Ly", numTurns: 0, totalPrice: 0, maskId: "4" },
+    { id: genUUID(), name: "Tài Ngô", numTurns: 0, totalPrice: 0, maskId: "5" },
+    {
+      id: genUUID(),
+      name: "Thiên Thảo",
+      numTurns: 0,
+      totalPrice: 0,
+      maskId: "6",
+    },
+    {
+      id: genUUID(),
+      name: "Trà Giang",
+      numTurns: 0,
+      totalPrice: 0,
+      maskId: "7",
+    },
+    {
+      id: genUUID(),
+      name: "Chim sâu",
+      numTurns: 0,
+      totalPrice: 0,
+      maskId: "8",
+    },
+    {
+      id: genUUID(),
+      name: "Thành Huy",
+      numTurns: 0,
+      totalPrice: 0,
+      maskId: "9",
+    },
+    {
+      id: genUUID(),
+      name: "Thanh Thu",
+      numTurns: 0,
+      totalPrice: 0,
+      maskId: "10",
+    },
   ],
   gameDone: false,
   listPrice: [
@@ -101,6 +150,7 @@ const reducer = (state: IGameState, action: GameAction): IGameState => {
     case "gamerJoin": {
       const nextState: IGameState = JSON.parse(JSON.stringify(state));
       const { gamer } = action.payload;
+      gamer.maskId = (nextState.listGamerJoined.length + 1).toString();
       nextState.listGamerJoined.push(gamer);
       return nextState;
     }
@@ -127,6 +177,8 @@ const reducer = (state: IGameState, action: GameAction): IGameState => {
     case "play": {
       const nextState: IGameState = JSON.parse(JSON.stringify(state));
       nextState.rolling = true;
+      nextState.currentPieces = undefined;
+      nextState.currentGamer = undefined;
       return nextState;
     }
 

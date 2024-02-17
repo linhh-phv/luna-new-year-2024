@@ -9,7 +9,7 @@ interface IProps {}
 
 const ListDices: React.FC<IProps> = ({}) => {
   const dataFromContext = useContext(GourdCrabShrimpFishContext);
-  const { dispatch, listDiceResult, listPieces, rolling, gameDone } =
+  const { dispatch, listDiceResult, listPieces, rolling, gameDone, listGamer } =
     dataFromContext!;
 
   const _onPlay = () => {
@@ -51,8 +51,13 @@ const ListDices: React.FC<IProps> = ({}) => {
     );
   };
   const _renderBtnBet = () => {
+    const _classesPlay = `flex justify-center mt-10 ${
+      listGamer.length === 0 && !gameDone
+        ? "opacity-[0.7] pointer-events-none"
+        : ""
+    }`;
     return (
-      <div className="flex justify-center mt-10">
+      <div className={_classesPlay}>
         <button
           className="text-5xl text-red-500 bg-white pl-4 pr-4 pt-2 rounded-lg"
           onClick={_onPlay}
